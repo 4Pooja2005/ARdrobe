@@ -4,7 +4,7 @@
 
 **Features:**
 
-- Invisible Cloak: Replace a specific color with the background dynamically.
+- Invisible Cloak: Replace a specific color with the background.
 - Glowing Cloak: Applies a bright color filter to the cloak.
 - Mirror Cloak: Mirror effect applied to the cloak area.
 - AR Text: Type text to display directly on your clothing.
