@@ -10,8 +10,8 @@ running = False
 mode = "Normal"
 user_text = "⚡ Wizard Mode ⚡"
 text_color_name = "Black"
-overlay_image = None  # Image to overlay
-background = None     # Captured background for invisibility
+overlay_image = None  # to overlay the image
+background = None     # Capturing the background for the ivisibility feature to work
 
 color_dict = {
     "Black": (0, 0, 0),
@@ -53,9 +53,9 @@ def apply_effect(frame):
 
     if mode == "Invisible Cloak":
         if background is None:
-            # If background not captured yet, show black
+            # if background not captured yet, show black
             return cv2.bitwise_and(frame, frame, mask=cv2.bitwise_not(mask))
-        # Use captured background where cloak is detected
+        # using captured background where cloak is detected
         res1 = cv2.bitwise_and(background, background, mask=mask)
         res2 = cv2.bitwise_and(frame, frame, mask=cv2.bitwise_not(mask))
         return cv2.addWeighted(res1, 1, res2, 1, 0)
@@ -78,7 +78,7 @@ def apply_effect(frame):
                 x, y, w, h = cv2.boundingRect(cnt)
 
                 if mode == "AR Filter":
-                    # Text overlay
+                    # text overlaying
                     text = user_text
                     font = cv2.FONT_HERSHEY_SIMPLEX
                     scale = 1
@@ -90,10 +90,10 @@ def apply_effect(frame):
                     cv2.putText(frame, text, (text_x, text_y), font, scale, color, thickness, cv2.LINE_AA)
 
                 elif mode == "Image Overlay" and overlay_image is not None:
-                    # Resize overlay image to bounding box
+                    # resizing the overlayed image to bounding box(red area)
                     overlay_resized = cv2.resize(overlay_image, (w, h))
 
-                    # Prepare overlay and alpha
+                    # preparing overlay and alpha
                     if overlay_resized.shape[2] == 4:  # PNG with alpha
                         overlay_rgb = overlay_resized[:, :, :3]
                         overlay_alpha = overlay_resized[:, :, 3] / 255.0
@@ -101,7 +101,7 @@ def apply_effect(frame):
                         overlay_rgb = overlay_resized
                         overlay_alpha = np.ones((h, w))
 
-                    # Crop red mask to bounding box
+                    # croping the red mask to bounding box
                     mask_crop = mask[y:y+h, x:x+w] / 255.0
                     final_alpha = overlay_alpha * mask_crop
 
@@ -122,7 +122,7 @@ def start_camera():
     cap = cv2.VideoCapture(0)
     running = True
 
-    # Capture background first for invisibility
+    # capturing the background first for invisibility feature
     capture_background()
 
     def run():
@@ -179,7 +179,7 @@ start_btn.pack(pady=5)
 stop_btn = tk.Button(root, text="Stop Camera", command=stop_camera, width=25)
 stop_btn.pack(pady=5)
 
-# Dropdown for effects
+# dropdown list for effects
 effect_var = tk.StringVar(value="Normal")
 effect_label = tk.Label(root, text="Choose Effect:")
 effect_label.pack(pady=5)
@@ -242,8 +242,6 @@ def update_widgets(event=None):
         img_btn.pack_forget()
 
 effect_dropdown.bind("<<ComboboxSelected>>", lambda e: [change_mode(), update_widgets()])
-
-# Call once at start to set default visibility
 update_widgets()
 
 root.mainloop()
